@@ -1,7 +1,7 @@
 // Create a map object
-var myMap = L.map("mapid", {
+var myMap = L.map("map", {
   center: [40.7, -94.5],
-  zoom: 8
+  zoom: 5
 });
   
 // Create the tile layer (background of the map)
@@ -15,25 +15,22 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(myMap);
   
 function markerSize(mag) {
-  return mag / 40;
+  return mag * 10000;
 }
 
-function markerColor(depth) {
-}
+// function markerColor(depth) {
+// }
 
-var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-
-
-d3.json(url, function (data) {
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson", function(data) {
     
   var earthquakes = data.features;
 
   for (var i = 0; i < earthquakes.length; i++) {
 
-    var quakeMarker = L.circle([earthquakes.geometry[i].coordinates[0],earthquakes.geometry[i].coordinates[1]], {
+    L.circle([earthquakes[i].geometry.coordinates[1],earthquakes[i].geometry.coordinates[0]], {
       color: "black",
       fillColor: "green",
-      radius: markerSize(earthquakes.properties[i].mag)
-    }).bindPopup("")
+      radius: markerSize(earthquakes[i].properties.mag)
+    }).bindPopup("<h2>" + earthquakes[i].properties.title + "</h2> <hr> <h3>Magnitude: " + earthquakes[i].properties.mag + "</h3>").addTo(myMap);
   }
 });
