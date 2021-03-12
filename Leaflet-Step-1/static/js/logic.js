@@ -1,6 +1,6 @@
 // Create a map object
 var myMap = L.map("map", {
-  center: [40.7, -94.5],
+  center: [39.419220, -111.950684],
   zoom: 5
 });
   
@@ -18,8 +18,15 @@ function markerSize(mag) {
   return mag * 10000;
 }
 
-// function markerColor(depth) {
-// }
+function markerColor(depth) {
+  return depth > 90 ? "#d73027" :
+         depth > 70 ? "#fc8d59" :
+         depth > 50 ? "#fee08b" :
+         depth > 30 ? "#ffffbf" :
+         depth > 10 ? "#d9ef8b" :
+         depth > -10 ? "#91cf60" :
+                      "#1a9850" ;
+}
 
 d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson", function(data) {
     
@@ -29,8 +36,9 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geoj
 
     L.circle([earthquakes[i].geometry.coordinates[1],earthquakes[i].geometry.coordinates[0]], {
       color: "black",
-      fillColor: "green",
+      fillColor: markerColor(earthquakes[i].geometry.coordinates[2]),
+      fillOpacity: 0.8,
       radius: markerSize(earthquakes[i].properties.mag)
-    }).bindPopup("<h2>" + earthquakes[i].properties.title + "</h2> <hr> <h3>Magnitude: " + earthquakes[i].properties.mag + "</h3>").addTo(myMap);
+    }).bindPopup("<h3>" + earthquakes[i].properties.place + "</h3> <hr> <h4>Magnitude: " + earthquakes[i].properties.mag + "</h4> <h4>Depth: " + earthquakes[i].geometry.coordinates[2] + "</h4>").addTo(myMap);
   }
 });
