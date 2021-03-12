@@ -41,4 +41,21 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geoj
       radius: markerSize(earthquakes[i].properties.mag)
     }).bindPopup("<h3>" + earthquakes[i].properties.place + "</h3> <hr> <h4>Magnitude: " + earthquakes[i].properties.mag + "</h4> <h4>Depth: " + earthquakes[i].geometry.coordinates[2] + "</h4>").addTo(myMap);
   }
+  
+  // Set up the Legend
+  var legend = L.control({position: "bottomright"});
+  legend.onAdd = function(map) {
+    var div = L.DomUtil.create("div", "info legend"),
+        grades = [-10, 10, 30, 50, 70, 90],
+        labels = [];
+
+    // Loop through the depth intervals
+    for (var i = 0; i < grades.length; i++) {
+      div.innerHTML +=
+        '<i style="background:' + markerColor(grades[i + 1]) + '"></i>' + 
+        grades[i] + (grades[i + 1] ? '&dash;' + grades[i + 1] + '<br>' : '+');
+    }
+    return div;
+  };
+  legend.addTo(myMap);
 });
