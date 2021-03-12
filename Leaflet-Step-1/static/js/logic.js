@@ -10,7 +10,7 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   tileSize: 512,
   maxZoom: 18,
   zoomOffset: -1,
-  id: "mapbox/streets-v11",
+  id: "mapbox/light-v9",
   accessToken: API_KEY
 }).addTo(myMap);
   
@@ -28,6 +28,22 @@ function markerColor(depth) {
                       "#1a9850" ;
 }
 
+// Set up the Legend
+var legend = L.control({position: "bottomright"});
+legend.onAdd = function(map) {
+  var div = L.DomUtil.create("div", "info legend"),
+      grades = [-10, 10, 30, 50, 70, 90]
+
+  // Loop through the depth intervals
+  for (var i = 0; i < grades.length; i++) {
+    div.innerHTML +=
+        '<i style="background:' + markerColor(grades[i] + 1) + '"></i> ' +
+        grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+}
+  return div;
+};
+legend.addTo(myMap);
+
 d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson", function(data) {
     
   var earthquakes = data.features;
@@ -41,21 +57,4 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geoj
       radius: markerSize(earthquakes[i].properties.mag)
     }).bindPopup("<h3>" + earthquakes[i].properties.place + "</h3> <hr> <h4>Magnitude: " + earthquakes[i].properties.mag + "</h4> <h4>Depth: " + earthquakes[i].geometry.coordinates[2] + "</h4>").addTo(myMap);
   }
-  
-  // Set up the Legend
-  var legend = L.control({position: "bottomright"});
-  legend.onAdd = function(map) {
-    var div = L.DomUtil.create("div", "info legend"),
-        grades = [-10, 10, 30, 50, 70, 90],
-        labels = [];
-
-    // Loop through the depth intervals
-    for (var i = 0; i < grades.length; i++) {
-      div.innerHTML +=
-        '<i style="background:' + markerColor(grades[i + 1]) + '"></i>' + 
-        grades[i] + (grades[i + 1] ? '&dash;' + grades[i + 1] + '<br>' : '+');
-    }
-    return div;
-  };
-  legend.addTo(myMap);
 });
