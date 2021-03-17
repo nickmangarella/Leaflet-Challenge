@@ -13,12 +13,14 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   id: "mapbox/light-v9",
   accessToken: API_KEY
 }).addTo(myMap);
-  
-function markerSize(mag) {
+
+// Create a function to set the cirlce size to the magnitude
+function circleSize(mag) {
   return mag * 10000;
 }
 
-function markerColor(depth) {
+// Create a function to set the circle color to a depth range
+function circleColor(depth) {
   return depth > 90 ? "#d73027" :
          depth > 70 ? "#fc8d59" :
          depth > 50 ? "#fee08b" :
@@ -37,24 +39,27 @@ legend.onAdd = function(map) {
   // Loop through the depth intervals
   for (var i = 0; i < grades.length; i++) {
     div.innerHTML +=
-        '<i style="background:' + markerColor(grades[i] + 1) + '"></i> ' +
+        '<i style="background:' + circleColor(grades[i] + 1) + '"></i> ' +
         grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
 }
   return div;
 };
 legend.addTo(myMap);
 
+// Read in the data from the API
 d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson", function(data) {
     
   var earthquakes = data.features;
 
+  // For loop to cycle through each object (earthquake)
   for (var i = 0; i < earthquakes.length; i++) {
 
+    // Render the earthquakes on the map as circles and call functions fillColor and radius
     L.circle([earthquakes[i].geometry.coordinates[1],earthquakes[i].geometry.coordinates[0]], {
       color: "black",
-      fillColor: markerColor(earthquakes[i].geometry.coordinates[2]),
+      fillColor: circleColor(earthquakes[i].geometry.coordinates[2]),
       fillOpacity: 0.8,
-      radius: markerSize(earthquakes[i].properties.mag)
+      radius: circleSize(earthquakes[i].properties.mag)
     }).bindPopup("<h3>" + earthquakes[i].properties.place + "</h3> <hr> <h4>Magnitude: " + earthquakes[i].properties.mag + "</h4> <h4>Depth: " + earthquakes[i].geometry.coordinates[2] + "</h4>").addTo(myMap);
   }
 });
