@@ -87,3 +87,30 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geoj
   }
 });
 ```
+
+### Step 2 - style.css:
+* Added color to the info class (background of the legend)
+* Set the legend class and inner i tag to format the depth ranges and corresponding colors next to one another
+```
+.info {
+  padding: 6px 8px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+
+.legend {
+  line-height: 18px;
+  color: #555;
+}
+
+.legend i {
+  width: 16px;
+  height: 16px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.8;
+}
+```
