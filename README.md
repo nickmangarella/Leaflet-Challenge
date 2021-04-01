@@ -1,4 +1,4 @@
-# Leaflet-Challenge
+# leaflet-earthquake-map
 
 ## Description
 Utilizing Leaflet, JavaScript, HTML, and CSS to map all global earthquakes that have occured over the last seven days. The map updates in real time as the dataset is from the USGS Earthquake API <https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson>. The foundation for the map is brought from the mapbox API <https://api.mapbox.com>
